@@ -40,6 +40,17 @@
                 sleep 1
                 createdb -h 127.0.0.1 -p 5433 msf 2>/dev/null || true
               fi
+
+              # Configure Metasploit to auto-connect
+              mkdir -p "$HOME/.msf4"
+              cat > "$HOME/.msf4/database.yml" << DBEOF
+              production:
+                adapter: postgresql
+                database: msf
+                username: $USER
+                host: 127.0.0.1
+                port: 5433
+              DBEOF
             '';
           };
         });
