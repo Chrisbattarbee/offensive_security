@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -e
+
+PGDATA="${HOME}/.local/share/msf-postgres"
+SOCKET_DIR="${PGDATA}/socket"
+
+start_db() {
+    if [ -f "${PGDATA}/postmaster.pid" ]; then
+        echo "PostgreSQL already running"
+        return 0
+    fi
+
+    if [ ! -d "${PGDATA}" ]; then
+        echo "Initializing PostgreSQL database..."
+        initdb -D "${PGDATA}" --auth=trust
+        mkdir -p "${SOCKET_DIR}"
+        echo "unix_socket_directories = '${SOCKET_DIR}'" >> "${PGDATA}/postgresql.conf"
+        echo "listen_addresses = '127.0.0.1'" >> "${PGDATA}/postgresql.conf"
+        echo "port = 5433" >> "${PGDATA}/postgresql.conf"
+    fi
+
+    echo "Starting PostgreSQL..."
+    pg_ctl -D "${PGDATA}" -l "${PGDATA}/logfile" start
+
+    sleep 2
+
+    # Create msf database if it doesn't exist
+    if ! psql -h 127.0.0.1 -p 5433 -lqt | cut -d \| -f 1 | grep -qw msf; then
+        echo "Creating msf database..."
+        createdb -h 127.0.0.1 -p 5433 msf
+    fi
+
+    echo "Database ready. Connect msfconsole with:"
+    echo "  db_connect postgres@127.0.0.1:5433/msf"
+}
+
+stop_db() {
+    if [ -f "${PGDATA}/postmaster.pid" ]; then
+        echo "Stopping PostgreSQL..."
+        pg_ctl -D "${PGDATA}" stop
+    else
+        echo "PostgreSQL not running"
+    fi
+}
+
+status_db() {
+    if [ -f "${PGDATA}/postmaster.pid" ]; then
+        echo "PostgreSQL is running"
+        pg_ctl -D "${PGDATA}" status
+    else
+        echo "PostgreSQL is not running"
+    fi
+}
+
+case "${1:-start}" in
+    start)  start_db ;;
+    stop)   stop_db ;;
+    status) status_db ;;
+    *)      echo "Usage: $0 {start|stop|status}" ;;
+esac
