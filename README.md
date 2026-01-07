@@ -2,11 +2,17 @@
 
 ## Getting Started
 
+With direnv installed:
+```bash
+direnv allow
+```
+
+Or manually:
 ```bash
 nix develop -c $SHELL
 ```
 
-This starts a shell with offensive security tools available (nmap, metasploit, vagrant).
+This starts a shell with offensive security tools available (nmap, metasploit, vagrant, virtualbox).
 
 ## Directory Structure
 
