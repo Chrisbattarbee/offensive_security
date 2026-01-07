@@ -25,6 +25,7 @@
               pkgs.libvirt
               pkgs.qemu
             ];
+            VAGRANT_DEFAULT_PROVIDER = "libvirt";
           };
         });
     };
