@@ -22,7 +22,8 @@
               pkgs.nmap
               pkgs.metasploit
               pkgs.vagrant
-              pkgs.virtualbox
+              pkgs.libvirt
+              pkgs.qemu
             ];
           };
         });

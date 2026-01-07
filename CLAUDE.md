@@ -9,7 +9,7 @@ Enter the dev shell with all tools available:
 nix develop -c $SHELL
 ```
 
-Tools included: nmap, metasploit, vagrant, virtualbox
+Tools included: nmap, metasploit, vagrant, libvirt, qemu
 
 ## Adding New Tools
 
