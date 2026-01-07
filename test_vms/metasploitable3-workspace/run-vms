@@ -13,13 +13,5 @@ if ! vagrant box list | grep -q "rapid7/metasploitable3-ub1404.*libvirt"; then
     vagrant mutate rapid7/metasploitable3-ub1404 libvirt --input-provider virtualbox
 fi
 
-echo "Setting up Windows 2008 box..."
-if ! vagrant box list | grep -q "rapid7/metasploitable3-win2k8.*libvirt"; then
-    echo "Downloading VirtualBox box..."
-    vagrant box add rapid7/metasploitable3-win2k8 --provider virtualbox 2>/dev/null || true
-    echo "Converting to libvirt..."
-    vagrant mutate rapid7/metasploitable3-win2k8 libvirt --input-provider virtualbox
-fi
-
-echo "Starting VMs..."
+echo "Starting VM..."
 vagrant up
