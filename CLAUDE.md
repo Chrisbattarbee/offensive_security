@@ -9,7 +9,24 @@ Enter the dev shell with all tools available:
 nix develop -c $SHELL
 ```
 
-Tools included: nmap, metasploit, vagrant, libvirt, qemu
+Tools included: nmap, metasploit, vagrant, libvirt, qemu, postgresql, tmux
+
+## Using Metasploit
+
+msfconsole runs in a persistent tmux session to avoid slow startup times. Use:
+
+```bash
+# Start or attach to msfconsole session
+~/.local/bin/msf
+
+# Send a command to the running session (for scripting)
+tmux send-keys -t msf "search phpmyadmin" Enter
+
+# Read output from the session
+tmux capture-pane -t msf -p
+```
+
+The PostgreSQL database auto-starts and msfconsole auto-connects to it for fast module searches.
 
 ## Adding New Tools
 
